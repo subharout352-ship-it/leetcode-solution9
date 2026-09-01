@@ -1,0 +1,35 @@
+class Solution(object):
+    def sortedListToBST(self, head):
+        """
+        :type head: Optional[ListNode]
+        :rtype: Optional[TreeNode]
+        """
+        if not head:
+            return None
+
+        # Find the middle node using slow and fast pointers
+        slow = head
+        fast = head
+        prev = None
+
+        while fast and fast.next:
+            prev = slow
+            slow = slow.next
+            fast = fast.next.next
+
+        # Disconnect left half
+        if prev:
+            prev.next = None
+
+        # Create root from middle node
+        root = TreeNode(slow.val)
+
+        # If only one node
+        if slow == head:
+            return root
+
+        # Build left and right subtrees
+        root.left = self.sortedListToBST(head)
+        root.right = self.sortedListToBST(slow.next)
+
+        return root
